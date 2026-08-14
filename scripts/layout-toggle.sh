@@ -2,51 +2,41 @@
 
 # Toggle between grouped (tabbed) and ungrouped (tiled) windows
 # Similar to sway's layout toggle tabbed/split
+#
+# Hyprland 0.55+ runs a lua config, so `hyprctl dispatch <name> <args>` no
+# longer parses. The whole thing now goes through one `hyprctl eval` chunk,
+# which also gets rid of the jq round-trips.
 
-# Get current workspace ID
-workspace_id=$(hyprctl activeworkspace -j | jq -r '.id')
+hyprctl eval '
+local ws = hl.get_active_workspace()
+if not ws then return "no active workspace" end
 
-# Get all window addresses on current workspace
-windows=$(hyprctl clients -j | jq -r --arg ws "$workspace_id" '.[] | select(.workspace.id == ($ws | tonumber)) | .address')
+local windows = hl.get_workspace_windows(ws)
+if #windows == 0 then return "no windows" end
 
-# Count windows
-window_count=$(echo "$windows" | wc -l)
+local grouped = false
+for _, w in ipairs(windows) do
+    if w.group then grouped = true break end
+end
 
-# Check if any window is already grouped
-is_grouped=$(hyprctl clients -j | jq -r --arg ws "$workspace_id" '.[] | select(.workspace.id == ($ws | tonumber)) | .grouped | length > 0' | grep -q "true" && echo "true" || echo "false")
-
-if [ "$is_grouped" = "false" ]; then
-    # Group all windows (enter tabbed mode)
-
-    # Create group with first window
-    first_window=$(echo "$windows" | head -n1)
-    hyprctl dispatch focuswindow "address:$first_window"
-    hyprctl dispatch togglegroup
-
-    # Add each remaining window by trying all directions
-    for window in $(echo "$windows" | tail -n +2); do
-        hyprctl dispatch focuswindow "address:$window"
-
-        # Try each direction until one works
-        for direction in l r u d; do
-            hyprctl dispatch moveintogroup $direction 2>/dev/null
-
-            # Check if window is now grouped
-            is_now_grouped=$(hyprctl clients -j | jq -r --arg addr "$window" '.[] | select(.address == $addr) | .grouped | length > 0')
-            if [ "$is_now_grouped" = "true" ]; then
-                break
-            fi
-        done
-    done
-
-    notify-send -t 1000 "Layout" "Grouped (Tabbed)" 2>/dev/null || true
+if grouped then
+    -- Ungroup all windows (return to tiled mode)
+    for _, w in ipairs(windows) do
+        hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w }))
+    end
+    hl.exec_cmd("notify-send -t 1000 Layout \"Ungrouped (Tiled)\"")
 else
-    # Ungroup all windows (return to tiled mode)
+    -- Group all windows (enter tabbed mode)
+    hl.dispatch(hl.dsp.group.toggle({ window = windows[1] }))
 
-    for window in $windows; do
-        hyprctl dispatch focuswindow "address:$window"
-        hyprctl dispatch moveoutofgroup
-    done
-
-    notify-send -t 1000 "Layout" "Ungrouped (Tiled)" 2>/dev/null || true
-fi
+    -- Try each direction until one takes, same as the old shell version
+    for i = 2, #windows do
+        local w = windows[i]
+        for _, dir in ipairs({ "l", "r", "u", "d" }) do
+            hl.dispatch(hl.dsp.window.move({ into_group = dir, window = w }))
+            if w.group then break end
+        end
+    end
+    hl.exec_cmd("notify-send -t 1000 Layout \"Grouped (Tabbed)\"")
+end
+'
