@@ -1,7 +1,7 @@
 #!/bin/bash
 conf="$HOME/.config/hypr/monitors.lua"
 
-choice=$(printf "Work\nPlay\nHDR On\nHDR Off\nFix HDMI" | wofi --dmenu --prompt "Session" --config ~/.config/wofi/config/config --style ~/.config/wofi/src/macchiato/style.css --width 200)
+choice=$(printf "Work\nPlay\nHDR On\nHDR Off\nFix HDMI\nSwitch shell" | wofi --dmenu --prompt "Session" --config ~/.config/wofi/config/config --style ~/.config/wofi/src/macchiato/style.css --width 200)
 
 case "$choice" in
     Work)
@@ -16,6 +16,9 @@ case "$choice" in
     "HDR Off")
         sed -i -E 's/^local hdr = .*/local hdr = false/' "$conf"
         hyprctl reload >/dev/null
+        ;;
+    "Switch shell")
+        ~/.config/hypr/scripts/shell-switch.sh
         ;;
     "Fix HDMI")
         ~/.config/hypr/scripts/fix-hdmi.sh

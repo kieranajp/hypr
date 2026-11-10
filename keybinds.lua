@@ -11,12 +11,14 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 hl.bind(mainMod .. " + Return",         hl.dsp.exec_cmd(p.terminal))
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd(p.browser))
 hl.bind(mainMod .. " + Q",              hl.dsp.window.close())
-hl.bind(mainMod .. " + M",              hl.dsp.exit())
 hl.bind(mainMod .. " + SHIFT + R",      hl.dsp.exec_cmd("hyprctl reload"))
-hl.bind(mainMod .. " + E",              hl.dsp.exec_cmd(p.file_manager))
-hl.bind(mainMod .. " + V",              hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + D",              hl.dsp.exec_cmd(p.menu))
+hl.bind(mainMod .. " + SHIFT + T",      hl.dsp.window.float({ action = "toggle" })) -- DMS stock key
 hl.bind(mainMod .. " + SHIFT + D",      hl.dsp.exec_cmd("wofi-emoji"))
+
+-- Shell-specific binds (launcher, notifications...), see shell.lua
+for key, cmd in pairs(require("shell").binds) do
+    hl.bind(key, hl.dsp.exec_cmd(cmd))
+end
 hl.bind(mainMod .. " + P",              hl.dsp.window.pseudo())
 
 -- Layout management (sway muscle memory)
@@ -51,6 +53,9 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + " .. key,         hl.dsp.focus({ workspace = i }))
     hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
+
+-- Music Assistant scratchpad (see rules.lua)
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.workspace.toggle_special("music"))
 
 -- Example special workspace (scratchpad)
 -- hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))

@@ -24,7 +24,7 @@ if grouped then
     for _, w in ipairs(windows) do
         hl.dispatch(hl.dsp.window.move({ out_of_group = true, window = w }))
     end
-    hl.exec_cmd("notify-send -t 1000 Layout \"Ungrouped (Tiled)\"")
+    hl.exec_cmd("notify-send -h boolean:suppress-sound:true -t 1000 Layout \"Ungrouped (Tiled)\"")
 else
     -- Group all windows (enter tabbed mode)
     hl.dispatch(hl.dsp.group.toggle({ window = windows[1] }))
@@ -37,6 +37,6 @@ else
             if w.group then break end
         end
     end
-    hl.exec_cmd("notify-send -t 1000 Layout \"Grouped (Tabbed)\"")
+    hl.exec_cmd("notify-send -h boolean:suppress-sound:true -t 1000 Layout \"Grouped (Tabbed)\"")
 end
 '

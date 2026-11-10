@@ -101,3 +101,13 @@ hl.window_rule({
 
     workspace = 6,
 })
+
+-- Music Assistant lives on a scratchpad: closing its window quits the app and
+-- drops its MPRIS player (DMS media dash), so we hide it instead.
+-- Toggle with SUPER+SHIFT+M (keybinds.lua).
+hl.window_rule({
+    name  = "music-assistant-scratchpad",
+    match = { class = "^music-assistant-companion$" },
+
+    workspace = "special:music silent",
+})

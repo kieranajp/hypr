@@ -1,0 +1,4 @@
+shell
+# DMS-generated fragments; only windowrules.lua is required (see shell.lua)
+dms/*
+!dms/windowrules.lua
