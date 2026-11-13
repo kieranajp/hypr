@@ -22,6 +22,7 @@ return {
 
     binds = {
         ["SUPER + D"]             = dms("spotlight toggle"),
+        ["SUPER + SHIFT + D"]     = dms("spotlight toggleQuery ':e '"),  -- emojiLauncher plugin
         ["SUPER + E"]             = "dfiles show",
         -- Dash tabs: overview, media, wallpaper, weather, wellbeing
         ["SUPER + A"]             = dms("dash toggle overview"),

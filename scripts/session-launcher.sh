@@ -1,7 +1,7 @@
 #!/bin/bash
 conf="$HOME/.config/hypr/monitors.lua"
 
-choice=$(printf "Work\nPlay\nHDR On\nHDR Off\nFix HDMI" | wofi --dmenu --prompt "Session" --config ~/.config/wofi/config/config --style ~/.config/wofi/src/macchiato/style.css --width 200)
+choice=$(printf "Work\nPlay\nHDR On\nHDR Off\nFix HDMI" | dms dmenu -p "Session")
 
 case "$choice" in
     Work)
