@@ -82,7 +82,23 @@ func ioctl(fd int, req uintptr, buf []byte) error {
 	return nil
 }
 
+// query sends c, retrying a few times: the first request after the pad has
+// been idle often fails while the dongle wakes the link.
 func query(fd int, c command) ([]byte, error) {
+	var err error
+	for attempt := range 4 {
+		if attempt > 0 {
+			time.Sleep(time.Duration(attempt) * 150 * time.Millisecond)
+		}
+		var data []byte
+		if data, err = queryOnce(fd, c); err == nil || !errors.Is(err, errNoAnswer) {
+			return data, err
+		}
+	}
+	return nil, err
+}
+
+func queryOnce(fd int, c command) ([]byte, error) {
 	req := make([]byte, bufLen)
 	req[0] = reportID
 	r := req[1:]

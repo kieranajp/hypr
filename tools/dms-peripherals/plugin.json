@@ -1,0 +1,12 @@
+{
+    "id": "peripherals",
+    "name": "Peripherals",
+    "description": "Mouse and controller battery, controller mode and onboard profile",
+    "version": "0.1.0",
+    "author": "kieranajp",
+    "type": "widget",
+    "icon": "sports_esports",
+    "component": "./PeripheralsWidget.qml",
+    "capabilities": ["dankbar-widget"],
+    "permissions": []
+}
