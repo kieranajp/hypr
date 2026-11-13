@@ -51,7 +51,7 @@ type command struct{ class, id byte }
 var (
 	cmdBattery  = command{0x07, 0x80}
 	cmdCharging = command{0x07, 0x84}
-	// Active onboard profile (1-based). Read-only per
+	// Active onboard profile, 1-4 = Fn+A/B/X/Y on the pad. Read-only per
 	// github.com/Netruk44/wolverine-v3-pro-linux docs/protocol.md.
 	cmdProfile = command{0x05, 0x84}
 )

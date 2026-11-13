@@ -27,8 +27,12 @@ for d in /sys/bus/usb/devices/*; do
     esac
 done
 if [[ $mode == PC ]]; then
-    if c=$("$HOME/.local/bin/wolverine-battery" 2>/dev/null); then
-        parts+=("󰊴  PC ${c/ charging/ 󱐋}")
+    wb="$HOME/.local/bin/wolverine-battery"
+    if c=$("$wb" 2>/dev/null); then
+        # Onboard profile, switched with Fn+A/B/X/Y on the pad (1-4)
+        p=$("$wb" profile 2>/dev/null)
+        case $p in 1) p=A ;; 2) p=B ;; 3) p=X ;; 4) p=Y ;; *) p="" ;; esac
+        parts+=("󰊴  PC${p:+ · $p} · ${c/ charging/ 󱐋}")
     else
         parts+=("󰊴  PC")   # dongle present, pad asleep/off or no permission
     fi
