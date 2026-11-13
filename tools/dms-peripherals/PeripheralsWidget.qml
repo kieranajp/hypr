@@ -327,7 +327,8 @@ PluginComponent {
                     visible: !!root.pad
                     topPadding: Theme.spacingXS
                     leftPadding: Theme.spacingS
-                    text: "Profiles: Fn + A / B / X / Y   ·   Modes: Fn + Menu + A (PC) / X (Xbox)"
+                    text: "Profiles: Fn + A / B / X / Y\nModes: Fn + Menu + A (PC) · Fn + Menu + X (Xbox)"
+                    lineHeight: 1.3
                     font.pixelSize: Theme.fontSizeSmall
                     color: Theme.surfaceVariantText
                     wrapMode: Text.WordWrap
