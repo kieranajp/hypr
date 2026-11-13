@@ -1,4 +1,3 @@
-shell
-# DMS-generated fragments; only windowrules.lua is required (see shell.lua)
+# DMS-generated fragments; only windowrules.lua is required (see dms.lua)
 dms/*
 !dms/windowrules.lua

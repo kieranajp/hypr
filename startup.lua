@@ -6,12 +6,12 @@
 -- The `hyprland.start` event is the replacement for exec-once: it fires on
 -- startup only, not on config reload.
 
-local shell = require("shell")
+local dms = require("dms")
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("dbus-update-activation-environment --systemd --all")
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE DISPLAY HYPRLAND_INSTANCE_SIGNATURE")
-    for _, cmd in ipairs(shell.start) do
+    for _, cmd in ipairs(dms.start) do
         hl.exec_cmd(cmd)
     end
     hl.exec_cmd("hypridle")

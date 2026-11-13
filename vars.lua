@@ -9,8 +9,6 @@ local M = {
     terminal     = "kitty",
     browser      = "vivaldi",
     file_manager = "nemo",
-    menu         = "wofi --config ~/.config/wofi/config/config"
-                .. " --style ~/.config/wofi/src/macchiato/style.css --show drun",
 }
 
 -------------------------------

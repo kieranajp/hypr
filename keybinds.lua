@@ -15,8 +15,8 @@ hl.bind(mainMod .. " + SHIFT + R",      hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind(mainMod .. " + SHIFT + T",      hl.dsp.window.float({ action = "toggle" })) -- DMS stock key
 hl.bind(mainMod .. " + SHIFT + D",      hl.dsp.exec_cmd("wofi-emoji"))
 
--- Shell-specific binds (launcher, notifications...), see shell.lua
-for key, cmd in pairs(require("shell").binds) do
+-- Shell binds (launcher, dash, notifications...), see dms.lua
+for key, cmd in pairs(require("dms").binds) do
     hl.bind(key, hl.dsp.exec_cmd(cmd))
 end
 hl.bind(mainMod .. " + P",              hl.dsp.window.pseudo())
