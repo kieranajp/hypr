@@ -51,6 +51,9 @@ type command struct{ class, id byte }
 var (
 	cmdBattery  = command{0x07, 0x80}
 	cmdCharging = command{0x07, 0x84}
+	// Active onboard profile (1-based). Read-only per
+	// github.com/Netruk44/wolverine-v3-pro-linux docs/protocol.md.
+	cmdProfile = command{0x05, 0x84}
 )
 
 var errNoAnswer = errors.New("controller not answering")
@@ -116,7 +119,7 @@ func query(fd int, c command) ([]byte, error) {
 	return nil, errNoAnswer
 }
 
-func run() (string, int) {
+func run(args []string) (string, int) {
 	dev, err := findHidraw()
 	if err != nil {
 		return err.Error(), 1
@@ -127,6 +130,17 @@ func run() (string, int) {
 	}
 	defer f.Close()
 	fd := int(f.Fd())
+
+	if len(args) > 0 && args[0] == "profile" {
+		p, err := query(fd, cmdProfile)
+		if err != nil {
+			if errors.Is(err, errNoAnswer) {
+				return err.Error(), 2
+			}
+			return err.Error(), 3
+		}
+		return fmt.Sprintf("%d", p[0]), 0
+	}
 
 	bat, err := query(fd, cmdBattery)
 	if err != nil {
@@ -145,7 +159,7 @@ func run() (string, int) {
 }
 
 func main() {
-	msg, code := run()
+	msg, code := run(os.Args[1:])
 	if code == 0 {
 		fmt.Println(msg)
 	} else {
