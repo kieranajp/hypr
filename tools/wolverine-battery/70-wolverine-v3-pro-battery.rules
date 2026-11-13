@@ -1,0 +1,5 @@
+# Let the logged-in user query the Razer Wolverine V3 Pro dongle's vendor HID
+# interface (PC mode, 1532:0a4c) for battery level. See main.go.
+# Install: sudo install -m644 70-wolverine-v3-pro-battery.rules /etc/udev/rules.d/
+#          sudo udevadm control --reload && sudo udevadm trigger --subsystem-match=hidraw
+KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{idVendor}=="1532", ATTRS{idProduct}=="0a4c", TAG+="uaccess"
