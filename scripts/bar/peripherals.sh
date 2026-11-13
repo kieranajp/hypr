@@ -2,7 +2,8 @@
 # Peripheral batteries as one line of plain text for the DMS bar (Interval
 # Command plugin): Razer mouse via OpenRazer sysfs, Wolverine V3 Pro via
 # tools/wolverine-battery when its dongle is in PC mode and the pad is awake.
-# Anything absent is left out; prints "–" if nothing is found.
+# Anything absent is left out; prints "–" if nothing is found. The mouse has
+# no glyph here: the widget's own icon is the mouse.
 
 parts=()
 
@@ -10,7 +11,7 @@ parts=()
 dir=$(dirname "$(ls /sys/bus/hid/drivers/razermouse/*/charge_level 2>/dev/null | head -1)")
 if [[ -r $dir/charge_level ]]; then
     raw=$(cat "$dir/charge_level" 2>/dev/null)
-    m="󰍽 $(( ${raw:-0} * 100 / 255 ))%"
+    m="$(( ${raw:-0} * 100 / 255 ))%"
     [[ $(cat "$dir/charge_status" 2>/dev/null) == 1 ]] && m+=" 󱐋"
     parts+=("$m")
 fi
@@ -27,12 +28,12 @@ for d in /sys/bus/usb/devices/*; do
 done
 if [[ $mode == PC ]]; then
     if c=$("$HOME/.local/bin/wolverine-battery" 2>/dev/null); then
-        parts+=("󰊴 PC ${c/ charging/ 󱐋}")
+        parts+=("󰊴  PC ${c/ charging/ 󱐋}")
     else
-        parts+=("󰊴 PC")   # dongle present, pad asleep/off or no permission
+        parts+=("󰊴  PC")   # dongle present, pad asleep/off or no permission
     fi
 elif [[ $mode == Xbox ]]; then
-    parts+=("󰊴 Xbox")
+    parts+=("󰊴  Xbox")
 fi
 
 if (( ${#parts[@]} )); then
